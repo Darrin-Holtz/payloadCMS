@@ -3,7 +3,7 @@ import { webpackBundler } from '@payloadcms/bundler-webpack'
 import { mongooseAdapter } from '@payloadcms/db-mongodb'
 import { slateEditor } from '@payloadcms/richtext-slate'
 import path from 'path'
-// import { Users } from './collections/Users'
+import { Users } from './collections/Users'
 import dotenv from 'dotenv'
 
 dotenv.config({
@@ -12,12 +12,12 @@ dotenv.config({
 
 export default buildConfig({
   serverURL: process.env.NEXT_PUBLIC_SERVER_URL || 'https://payloadtestcms.payloadcms.app/',
-  collections: [], 
+  collections: [Users], 
   routes: {
     admin: '/sell',
   },
   admin: {
-    // user: 'users',
+    user: 'users',
     bundler: webpackBundler(),
     meta: {
       titleSuffix: '- DigitalHippo',
