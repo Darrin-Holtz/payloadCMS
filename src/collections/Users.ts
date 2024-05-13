@@ -1,40 +1,31 @@
-//import { PrimaryActionEmailHtml } from '../components/emails/PrimaryActionEmail'
-import { Access, CollectionConfig } from 'payload/types'
-
-const adminsAndUser: Access = ({ req: { user } }) => {
-  if (user.role === 'admin') return true
-
-  return {
-    id: {
-      equals: user.id,
-    },
-  }
-}
+import { CollectionConfig } from "payload/types";
 
 export const Users: CollectionConfig = {
-  slug: 'users',
-  auth: false,
+  slug: "users",
+  auth: {
+    verify: {
+      generateEmailHTML: ({ token }) => {
+        return `<a href="${process.env.NEXT_PUBLIC_SERVER_URL}/verify-email?token=${token}">Verify Account</a>`
+      }
+    }
+  },
   access: {
-    read: adminsAndUser,
+    read: () => true,
     create: () => true,
-    update: ({ req }) => req.user.role === 'admin',
-    delete: ({ req }) => req.user.role === 'admin',
   },
-  admin: {
-    hidden: ({ user }) => user.role !== 'admin',
-    defaultColumns: ['id'],
-  },
-  fields: [    
+  fields: [
     {
-      name: 'role',
-      defaultValue: 'user',
+      name: "role",
+      defaultValue: "user",
       required: true,
-
-      type: 'select',
+      admin: {
+        condition: () => false
+      },
+      type: "select",
       options: [
-        { label: 'Admin', value: 'admin' },
-        { label: 'User', value: 'user' },
-      ],
-    },
-  ],
+        { label: "Admin", value: "admin" },
+        { label: "User", value: "user" },
+      ]
+    }
+  ]
 }
